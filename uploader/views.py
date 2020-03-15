@@ -81,7 +81,14 @@ class FileUploadViewSet(views.APIView):
                 download_status, done = downloader.next_chunk()
 
             uploaded, image_info = wiki_uploader.upload_file(
+<<<<<<< HEAD
                 file_name=file["name"], file_stream=fh, date_created=file["date_created"], description=file["description"]
+=======
+                file_name=file["name"],
+                file_stream=fh,
+                description=file["description"],
+                license=file["license"],
+>>>>>>> Add license picker for each file and implemented get_initial_page_text function
             )
             if uploaded:
                 uploaded_results.append(image_info)

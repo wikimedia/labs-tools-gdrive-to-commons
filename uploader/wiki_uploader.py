@@ -23,7 +23,7 @@ class WikiUploader(object):
             access_secret=access_secret,
         )
 
-    def upload_file(self, file_name, file_stream, description=""):
+    def upload_file(self, file_name, file_stream, description="", license=""):
         if not description:
             description = file_name
 
@@ -33,7 +33,11 @@ class WikiUploader(object):
             description=description,
             date_created = date_created,
             ignore=True,
+<<<<<<< HEAD
             comment=get_initial_page_text(date_created, description),
+=======
+            comment=get_initial_page_text(license, description),
+>>>>>>> Add license picker for each file and implemented get_initial_page_text function
         )
         debug_information = "Uploaded: {0} to: {1}, more information: {2}".format(
             file_name, self.mw_client.host, upload_result
@@ -45,6 +49,7 @@ class WikiUploader(object):
         else:
             return True, upload_result["imageinfo"]
 
+<<<<<<< HEAD
 def get_initial_page_text(date_created="", summary=""):
 
     return """=={{{{int:filedesc}}}}==
@@ -57,3 +62,9 @@ def get_initial_page_text(date_created="", summary=""):
 """.format(
         summary, date_created
     )   
+=======
+
+def get_initial_page_text(license="", summary=""):
+
+    return "== Summary ==\n{0}\n== Licensing ==\n{{{{{1}}}}} ".format(summary, license)
+>>>>>>> Add license picker for each file and implemented get_initial_page_text function
