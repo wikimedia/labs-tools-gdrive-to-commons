@@ -272,7 +272,11 @@
         pickedFiles.push({
           name: item.name,
           id: item.id,
-          description: item.description
+          description: item.description,
+          source: '',
+          author: '',
+          license: '',
+          date_created: ''
         })
       );
 
@@ -300,7 +304,7 @@
             field: "name",
             editor: "input",
             validator: "unique",
-            width: 200,
+            width: 100,
             responsive:0,
           },
           {
@@ -309,12 +313,29 @@
             editor: "textarea",
             validator: "required",
             responsive:0,
-            width: 200,
+            width: 150,
+          },
+          {
+            title: "Source",
+            field: "source",
+            editor: "textarea",
+            responsive:0,
+            validator: "required",
+            width: 150,
+          },
+          {
+            title: "Author",
+            field: "author",
+            editor: "textarea",
+            responsive:0,
+            validator: "required",
+            width: 150,
           },
           {
             title: "License",
             field: "license",
             width: 200,
+            validator: "required",
             formatter: function(cell, formatterParams, onRendered) {
               return `{% include 'licenses.html' %}`;
             },
@@ -326,7 +347,7 @@
             formatter: function(cell, formatterParams, onRendered) {
               return `{% include 'datepicker.html' %}`;
             },
-            responsive:1, 
+            responsive:1,
             headerSort:false,
           },            
           {

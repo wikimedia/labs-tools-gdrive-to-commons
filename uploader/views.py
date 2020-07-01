@@ -86,6 +86,8 @@ class FileUploadViewSet(views.APIView):
                 date_created=file["date_created"],
                 description=file["description"],
                 license=file["license"],
+                author=file["author"],
+                source=file["source"],
             )
             if uploaded:
                 uploaded_results.append(image_info)

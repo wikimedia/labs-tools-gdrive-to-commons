@@ -24,7 +24,14 @@ class WikiUploader(object):
         )
 
     def upload_file(
-        self, file_name, file_stream, date_created="", description="", license=""
+        self,
+        file_name,
+        file_stream,
+        date_created="",
+        description="",
+        license="",
+        author="",
+        source="",
     ):
         if not description:
             description = file_name
@@ -33,10 +40,14 @@ class WikiUploader(object):
             file=file_stream,
             filename=file_name,
             description=get_initial_page_text(
-                license=license, date_of_creation=date_created, summary=description
+                license=license,
+                date_of_creation=date_created,
+                summary=description,
+                source=source,
+                author=author,
             ),
             ignore=True,
-            comment=description,
+            comment="Uploaded using gdrive-to-commons tool",
         )
         debug_information = "Uploaded: {0} to: {1}, more information: {2}".format(
             file_name, self.mw_client.host, upload_result
