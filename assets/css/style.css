@@ -113,6 +113,31 @@ body {
   background-color: white !important ;
 }
 
+/*****************************************************/
+/*                 Tabulator CSS                     */
+/*****************************************************/
+#picked-files-table .tabulator-row table{
+        vertical-align: middle;
+        border-collapse:collapse;
+    }
+
+    #picked-files-table .tabulator-row table img{
+        border:2px solid #ccc;
+    }
+
+    #picked-files-table .tabulator-row table tr td{
+         border:none;
+    }
+
+    #picked-files-table .tabulator-row table tr td:first-of-type{
+        width:60px;
+    }
+
+    #picked-files-table .tabulator-row table tr td div{
+        padding:5px;
+    }
+
+
 /* Custom page CSS
 -------------------------------------------------- */
 /* Not required for template or sticky footer method. */
