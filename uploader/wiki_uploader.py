@@ -32,6 +32,7 @@ class WikiUploader(object):
         license="",
         author="",
         source="",
+        location="",
     ):
         if not description:
             description = file_name
@@ -45,6 +46,7 @@ class WikiUploader(object):
                 summary=description,
                 source=source,
                 author=author,
+                location=location,
             ),
             ignore=True,
             comment="Uploaded using gdrive-to-commons tool",
@@ -68,6 +70,7 @@ def get_initial_page_text(
     date_of_creation=None,
     source=None,
     author=None,
+    location=None,
 ):
     description = "" if not summary else "|description={0}\n".format(summary)
     date_of_creation = (
@@ -77,15 +80,26 @@ def get_initial_page_text(
     author = "" if not author else "|author={0}\n".format(author)
     category = "" if not category else "[[Category:{0}]] ".format(category) + "\n"
 
-    return """=={{{{int:filedesc}}}}==
-{{{{Information
- {0}{1}{2}{3}
-}}}}
+    latitude = "" if not location["latitude"] else "|{0}\n".format(location["latitude"])
+    longitude = (
+        "" if not location["longitude"] else "|{0}\n".format(location["longitude"])
+    )
+    heading = (
+        "" if not location["heading"] else "heading:|{0}\n".format(location["heading"])
+    )
+    location_string = (
+        ""
+        if not (latitude and longitude)
+        else "{{{{Location{0}{1}{2}}}}}".format(latitude, longitude, heading)
+    )
 
+    return f"""=={{{{int:filedesc}}}}==
+{{{{Information
+ {description}{date_of_creation}{source}{author}
+}}}}
+{location_string}
 
 =={{{{int:license-header}}}}==
-{{{{{4}}}}}
-{5}
-""".format(
-        description, date_of_creation, source, author, license, category
-    )
+{{{{{license}}}}}
+{category}
+"""

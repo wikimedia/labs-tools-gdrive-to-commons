@@ -2,14 +2,21 @@ from rest_framework import serializers, fields
 import datetime
 
 
+class LocationSerializer(serializers.Serializer):
+    latitude = fields.CharField(allow_null=True, allow_blank=True)
+    longitude = fields.CharField(allow_null=True, allow_blank=True)
+    heading = fields.CharField(allow_null=True, allow_blank=True)
+
+
 class FileSerializer(serializers.Serializer):
-    name = fields.CharField(allow_blank=True)
-    id = fields.CharField(allow_blank=True)
+    name = fields.CharField(max_length=200)
+    id = fields.CharField(max_length=200)
     date_created = serializers.DateField(allow_null=True, default=datetime.date.today)
-    description = fields.CharField(max_length=200, allow_blank=True, allow_null=True)
-    license = fields.CharField(max_length=200, allow_blank=True, allow_null=True)
-    author = fields.CharField(max_length=200, allow_blank=True, allow_null=True)
-    source = fields.CharField(max_length=200, allow_blank=True, allow_null=True)
+    description = fields.CharField(max_length=200)
+    license = fields.CharField(max_length=200)
+    author = fields.CharField(max_length=200)
+    source = fields.CharField(max_length=200)
+    location = LocationSerializer()
 
 
 class GooglePhotosUploadInputSerializer(serializers.Serializer):

@@ -134,7 +134,7 @@ body {
     }
 
     #picked-files-table .tabulator-row table tr td div{
-        padding:5px;
+        padding:5px 0px;
     }
 
 

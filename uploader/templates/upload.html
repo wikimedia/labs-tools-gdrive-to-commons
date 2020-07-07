@@ -11,155 +11,160 @@
 {% endblock %} {% block body %}
 <!-- prettier-ignore -->
 <div class="container">
-  <div class="row">
-    <div class="col-lg-14 mx-auto step-3">
-      <div class="card card-signin my-5">
-        <div class="card-body">
-          <div class="row logo-row col-xs-12">
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px" />
-            </div>
-            <div class="col-xs-4">
-              <i class="fas fa-caret-right"></i>
-            </div>
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Commons-logo.svg' %}" height="100px" />
-            </div>
-          </div>
+        <div class="row">
+            <div class="col-lg-14 mx-auto step-3">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <div class="row logo-row col-xs-12">
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <i class="fas fa-caret-right"></i>
+                            </div>
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Commons-logo.svg' %}" height="100px"/>
+                            </div>
+                        </div>
 
-          <h5 class="app-desc text-center">Your selected file(s):</h5>
-          <div class="table-responsive">
-            <table class="table files-table" id="picked-files-table">
-            </table>
-          </div>
+                        <h5 class="app-desc text-center">Your selected file(s):</h5>
+                        <div class="table-responsive">
+                            <table class="table files-table" id="picked-files-table">
+                            </table>
+                        </div>
 
-          <form class="form-signin">
-            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button" id="upload-button"
-              onclick="uploadFiles()">
-              Upload to Wikimedia Commons <i class="fas fa-caret-right"></i>
-            </button>
-            <hr class="my-4" />
-            <h5 class="card-title text-center">
-              <div class="progress">
-                <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75" aria-valuemin="0"
-                  aria-valuemax="100">
-                  75%
+                        <form class="form-signin">
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button"
+                                    id="upload-button"
+                                    onclick="uploadFiles()">
+                                Upload to Wikimedia Commons <i class="fas fa-caret-right"></i>
+                            </button>
+                            <hr class="my-4"/>
+                            <h5 class="card-title text-center">
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" style="width: 75%" aria-valuenow="75"
+                                         aria-valuemin="0"
+                                         aria-valuemax="100">
+                                        75%
+                                    </div>
+                                </div>
+                            </h5>
+                        </form>
+                    </div>
                 </div>
-              </div>
-            </h5>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-sm-9 col-md-7 col-lg-5 mx-auto step-1-2">
-      <div class="card card-signin my-5">
-        <div class="card-body">
-          <div class="row logo-row col-xs-12">
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px" />
             </div>
-            <div class="col-xs-4">
-              <i class="fas fa-caret-right"></i>
-            </div>
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Commons-logo.svg' %}" height="100px" />
-            </div>
-          </div>
 
-          <h5 class="app-desc text-center">
-            Upload your photos from Google Drive to Wikimedia Commons!
-          </h5>
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto step-1-2">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <div class="row logo-row col-xs-12">
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <i class="fas fa-caret-right"></i>
+                            </div>
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Commons-logo.svg' %}" height="100px"/>
+                            </div>
+                        </div>
 
-          <form class="form-signin">
-            {% if user.is_authenticated %}
-            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button"
-              onclick="onGoogleUploadButtonClick()">
-              Choose photos from Google Drive
-              <i class="fas fa-caret-right"></i>
-            </button>
-            {% else %}
-            <a href="{% url 'social:begin' 'mediawiki' %}" style="text-decoration: none">
-              <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button">
-                Login to Wikimedia Commons
-                <i class="fas
+                        <h5 class="app-desc text-center">
+                            Upload your photos from Google Drive to Wikimedia Commons!
+                        </h5>
+
+                        <form class="form-signin">
+                            {% if user.is_authenticated %}
+                                <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button"
+                                        onclick="onGoogleUploadButtonClick()">
+                                    Choose photos from Google Drive
+                                    <i class="fas fa-caret-right"></i>
+                                </button>
+                            {% else %}
+                                <a href="{% url 'social:begin' 'mediawiki' %}" style="text-decoration: none">
+                                    <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button">
+                                        Login to Wikimedia Commons
+                                        <i class="fas
                     fa-caret-right fa-1x"></i>
-              </button>
-            </a>
-            {% endif %}
+                                    </button>
+                                </a>
+                            {% endif %}
 
-            <hr class="my-4" />
-            <h5 class="card-title text-center">
-              <div class="progress">
-                {% if user.is_authenticated %}
-                <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0"
-                  aria-valuemax="100">
-                  50%
+                            <hr class="my-4"/>
+                            <h5 class="card-title text-center">
+                                <div class="progress">
+                                    {% if user.is_authenticated %}
+                                        <div class="progress-bar" role="progressbar" style="width: 50%"
+                                             aria-valuenow="50" aria-valuemin="0"
+                                             aria-valuemax="100">
+                                            50%
+                                        </div>
+                                    {% else %}
+
+                                        <div class="progress-bar" role="progressbar" style="width: 25%"
+                                             aria-valuenow="25" aria-valuemin="0"
+                                             aria-valuemax="100">
+                                            25%
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </h5>
+                        </form>
+                    </div>
                 </div>
-                {% else %}
+            </div>
 
-                <div class="progress-bar" role="progressbar" style="width: 25%" aria-valuenow="25" aria-valuemin="0"
-                  aria-valuemax="100">
-                  25%
+            <div class="col-lg-8 mx-auto step-4">
+                <div class="card card-signin my-5">
+                    <div class="card-body">
+                        <div class="row logo-row col-xs-12">
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px"/>
+                            </div>
+                            <div class="col-xs-4">
+                                <i class="fas fa-caret-right"></i>
+                            </div>
+                            <div class="col-xs-4">
+                                <img src="{% static 'svg/Commons-logo.svg' %}" height="100px"/>
+                            </div>
+                        </div>
+
+                        <h5 class="app-desc text-center">
+                            The following files were uploaded!
+                        </h5>
+
+                        <div class="table-responsive mb-3">
+                            <table class="table mb-0 results-panel">
+                                <thead>
+                                <tr>
+                                    <th style="width: 105px">Preview</th>
+                                    <th>Name of file</th>
+                                    <th>Link to upload</th>
+                                </tr>
+                                </thead>
+                            </table>
+                        </div>
+
+                        <a class="btn btn-lg btn-primary btn-block text-uppercase" href='{% url "upload_page" %}'>
+                            Upload more <i class="fas fa-caret-right"></i>
+                        </a>
+
+                        <hr class="my-4"/>
+
+                        <h5 class="card-title text-center">
+                            <div class="progress">
+                                <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100"
+                                     aria-valuemin="0"
+                                     aria-valuemax="100">
+                                    100%
+                                </div>
+                            </div>
+                        </h5>
+                    </div>
                 </div>
-                {% endif %}
-              </div>
-            </h5>
-          </form>
+            </div>
         </div>
-      </div>
     </div>
-
-    <div class="col-lg-8 mx-auto step-4">
-      <div class="card card-signin my-5">
-        <div class="card-body">
-          <div class="row logo-row col-xs-12">
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Google_Drive_Logo.svg' %}" width="100px" />
-            </div>
-            <div class="col-xs-4">
-              <i class="fas fa-caret-right"></i>
-            </div>
-            <div class="col-xs-4">
-              <img src="{% static 'svg/Commons-logo.svg' %}" height="100px" />
-            </div>
-          </div>
-
-          <h5 class="app-desc text-center">
-            The following files were uploaded!
-          </h5>
-
-          <div class="table-responsive mb-3">
-            <table class="table mb-0 results-panel">
-              <thead>
-                <tr>
-                  <th style="width: 105px">Preview</th>
-                  <th>Name of file</th>
-                  <th>Link to upload</th>
-                </tr>
-              </thead>
-            </table>
-          </div>
-
-          <a class="btn btn-lg btn-primary btn-block text-uppercase" href='{% url "upload_page" %}'>
-            Upload more <i class="fas fa-caret-right"></i>
-          </a>
-
-          <hr class="my-4" />
-
-          <h5 class="card-title text-center">
-            <div class="progress">
-              <div class="progress-bar" role="progressbar" style="width: 100%" aria-valuenow="100" aria-valuemin="0"
-                aria-valuemax="100">
-                100%
-              </div>
-            </div>
-          </h5>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
 <!-- prettier-ignore -->
 {% endblock body %}
 <!-- prettier-ignore -->
@@ -192,32 +197,30 @@
   var oauthToken;
   var fileStagingTable;
 
-
-  function TDate(id)
-  {
-    var dc = document.getElementById(`dateCreated`+id).value;
+  function TDate(id) {
+    var dc = document.getElementById(`dateCreated` + id).value;
     var Today = new Date();
     var dd = Today.getDate();
     var mm = Today.getMonth() + 1; //January is 0!
     var yyyy = Today.getFullYear();
-    if (dd < 10)
-      { dd = '0' + dd; }
-    if (mm < 10)
-      { mm = '0' + mm; }
-    var dmy = yyyy+'-'+mm+'-'+dd;
-    if (new Date(dc).getTime() > Today.getTime())
-    {
-      alert("The Date created must be Less than or Equal to today's date")
-      document.getElementById(`dateCreated`+id).value = dmy;
+    if (dd < 10) {
+      dd = "0" + dd;
+    }
+    if (mm < 10) {
+      mm = "0" + mm;
+    }
+    var dmy = yyyy + "-" + mm + "-" + dd;
+    if (new Date(dc).getTime() > Today.getTime()) {
+      alert("The Date created must be Less than or Equal to today's date");
+      document.getElementById(`dateCreated` + id).value = dmy;
       return;
       //return document.getElementById("datecreated").value = null;
-
     }
-    return true
+    return true;
   }
 
   function removeRow(id) {
-      fileStagingTable.deleteRow(id).catch(function(error){});
+    fileStagingTable.deleteRow(id).catch(function (error) {});
   }
 
   // Use the Google API Loader script to load the google.picker script.
@@ -231,15 +234,17 @@
       {
         client_id: clientId,
         scope: scope,
-        immediate: false
+        immediate: false,
       },
       handleAuthResult
     );
   }
+
   function onPickerApiLoad() {
     pickerApiLoaded = true;
     createPicker();
   }
+
   function handleAuthResult(authResult) {
     if (authResult && !authResult.error) {
       oauthToken = authResult.access_token;
@@ -252,7 +257,7 @@
     if (pickerApiLoaded && oauthToken) {
       var view = new google.picker.DocsView().setIncludeFolders(true);
       view.setMimeTypes("image/jpeg,image/jpg,image/gif,image/png,image/bmp");
-      view.setParent('root');
+      view.setParent("root");
       var picker = new google.picker.PickerBuilder()
         .enableFeature(google.picker.Feature.NAV_HIDDEN)
         .enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
@@ -270,10 +275,11 @@
   function generateGdriveThumbNailLink(itemId) {
     return `https://drive.google.com/thumbnail?authuser=0&sz=w200-h200&id=${itemId}`;
   }
+
   // A simple callback implementation.
   function pickerCallback(data) {
     if (data.action == google.picker.Action.PICKED) {
-      data.docs.forEach(item =>
+      data.docs.forEach((item) =>
         pickedFiles.push({
           name: item.name,
           id: item.id,
@@ -286,49 +292,94 @@
       fileStagingTable = new Tabulator("#picked-files-table", {
         data: pickedFiles,
         layout: "fitColumns",
-        headerSort:false,
-        responsiveLayout:"collapse",
+        headerSort: false,
+        responsiveLayout: "collapse",
 
-        resizableColumns:false,
-        rowFormatter: function(row){
-            var element = row.getElement(),
-            data = row.getData(),
-            width = element.offsetWidth,
-            rowTable, cellContents;
+        resizableColumns: false,
+        rowFormatter: function (row) {
+          var element = row.getElement();
+          var data = row.getData();
+          var width = element.offsetWidth;
+          var rowTable;
+          var cellContents;
 
-            //clear current row data
-            if (element.id != "row"+data.id)
-                while(element.firstChild) element.removeChild(element.firstChild);
+          //clear current row data
+          if (element.id != "row" + data.id)
+            while (element.firstChild) element.removeChild(element.firstChild);
 
-            //define a table layout structure and set width of row
-            rowTable = document.createElement("table")
-            element.id = "row"+data.id;
-            rowTable.style.width = "100%";
+          //define a table layout structure and set width of row
+          rowTable = document.createElement("table");
+          element.id = "row" + data.id;
+          rowTable.style.width = "100%";
 
-            rowTabletr = document.createElement("tr");
+          rowTabletr = document.createElement("tr");
 
-            //add image on left of row
-            cellContents = "<td>";
-            cellContents += "<img width='200' src='"+ generateGdriveThumbNailLink(data.id)+ "'></td>";
-            cellContents += "<td><div><strong>Title:</strong><input class='form-control' id='title"+data.id+"' type='text' value='" + data.name + "'></div>"
-            cellContents += "<div><strong>Description:</strong><textarea class='form-control' id='description"+data.id+"' type='text',value='" + data.description + "'></textarea></div>"
-            cellContents += "<div><strong>License:</strong>" + `{% include 'licenses.html' %}` + "</div>"
-            cellContents += "<div><strong>Date of Creation:</strong> " + `{% include 'datepicker.html' %}` + "</div>"
-            cellContents += "<div><strong>Author:</strong><input class='form-control' id='author"+data.id+"' type='text'></div>"
-            cellContents += "<div><strong>Source:</strong><input class='form-control' id='source"+data.id+"' type='text'></div>"
-            cellContents += "<div><button type='button' class='btn btn-danger' onclick='removeRow(\""+data.id+"\")' >Delete</button></div>"
-            cellContents += "</td>"
+          //add image on left of row
+          cellContents = "<td>";
+          cellContents +=
+            "<img width='200' src='" +
+            generateGdriveThumbNailLink(data.id) +
+            "'></td>";
+          cellContents +=
+            "<td><div><strong>Image title*</strong><input class='form-control' id='title" +
+            data.id +
+            "' type='text' value='" +
+            data.name +
+            "'></div>";
+          cellContents +=
+            "<div><strong>Description*</strong><textarea class='form-control' id='description" +
+            data.id +
+            "' type='text',value='" +
+            data.description +
+            "'></textarea></div>";
+          cellContents +=
+            "<div><strong>License*</strong>" +
+            `{% include 'licenses.html' %}` +
+            "</div>";
+          cellContents +=
+            "<div><strong>Date work was created or first published*</strong> " +
+            `{% include 'datepicker.html' %}` +
+            "</div>";
+          cellContents +=
+            "<div><strong>Author*</strong><input class='form-control' id='author" +
+            data.id +
+            "' type='text'></div>";
+          cellContents +=
+            "<div><strong>Source*</strong><input class='form-control' id='source" +
+            data.id +
+            "' type='text'></div>";
 
-            rowTabletr.innerHTML = cellContents;
-            rowTable.appendChild(rowTabletr);
-            element.append(rowTable);
-          },
+          cellContents += "<div class='row' style='margin: 0px;'>";
+          cellContents +=
+            "<div class='col-xs-12 col-md-4'><strong>Latitude</strong><input class='form-control' id='latitude" +
+            data.id +
+            "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
+          cellContents +=
+            "<div class='col-xs-12 col-md-4'><strong>Longitude</strong><input class='form-control' id='longitude" +
+            data.id +
+            "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
+          cellContents +=
+            "<div class='col-xs-12 col-md-4'><strong>Heading</strong><input class='form-control' id='heading" +
+            data.id +
+            "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
+          cellContents += "</div>";
+
+          cellContents +=
+            "<div><button type='button' class='btn btn-danger' onclick='removeRow(\"" +
+            data.id +
+            "\")' >Delete</button></div>";
+          cellContents += "</td>";
+
+          rowTabletr.innerHTML = cellContents;
+          rowTable.appendChild(rowTabletr);
+          element.append(rowTable);
+        },
         columns: [
           {
             title: "Selected Files",
-            responsive:0,
+            responsive: 0,
           },
-        ]
+        ],
       });
       fileStagingTable.setData(pickedFiles);
     }
@@ -340,19 +391,35 @@
     $("#upload-button i")
       .removeClass("fa-caret-right")
       .addClass("fa-spinner fa-spin");
-    var fileData = {
-      fileList: fileStagingTable.getData(),
-      token: oauthToken
+
+
+    let tableData = fileStagingTable.getData();
+    let stagedImagesData = [];
+
+    for (var x = 0; x < tableData.length; x++) {
+      let imageId = tableData[x]["id"];
+      stagedImagesData.push(
+        {
+          id: imageId,
+          date_created: document.getElementById(`dateCreated${imageId}`).value,
+          license: document.getElementById(`license${imageId}`).value,
+          name: document.getElementById(`title${imageId}`).value,
+          description: document.getElementById(`description${imageId}`).value,
+          author: document.getElementById(`author${imageId}`).value,
+          source: document.getElementById(`source${imageId}`).value,
+          location: {
+            latitude: document.getElementById(`latitude${imageId}`).value,
+            longitude: document.getElementById(`longitude${imageId}`).value,
+            heading: document.getElementById(`heading${imageId}`).value,
+          }
+        }
+      );
     };
 
-    for (var x = 0; x < fileData["fileList"].length; x++) {
-      fileData["fileList"][x]["date_created"] = document.getElementById(`dateCreated${fileData["fileList"][x]["id"]}`).value;
-      fileData["fileList"][x]["license"] = document.getElementById(`license${fileData["fileList"][x]["id"]}`).value;
-      fileData["fileList"][x]["name"] = document.getElementById(`title${fileData["fileList"][x]["id"]}`).value;
-      fileData["fileList"][x]["description"] = document.getElementById(`description${fileData["fileList"][x]["id"]}`).value;
-      fileData["fileList"][x]["author"] = document.getElementById(`author${fileData["fileList"][x]["id"]}`).value;
-      fileData["fileList"][x]["source"] = document.getElementById(`source${fileData["fileList"][x]["id"]}`).value;
-    }
+    var fileData = {
+      fileList: stagedImagesData,
+      token: oauthToken,
+    };
 
     function getCookie(name) {
       var cookieValue = null;
@@ -392,28 +459,28 @@
       cache: false,
       processData: false,
       contentType: "application/json",
-      beforeSend: function(xhr, settings) {
+      beforeSend: function (xhr, settings) {
         if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
           xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
       },
-      success: function(data) {
+      success: function (data) {
         $(".step-3").hide();
         $(".step-1-2").hide();
         $(".step-4").show();
         $(".results-panel").append("<tbody>");
         enableUploadButton();
-        data.forEach(function(item) {
+        data.forEach(function (item) {
           $(".results-panel").append(
             `<tr><td><img src='${item.url}' style='width: 50px'></td><td>${item.canonicaltitle}</td><td><a href='${item.url}' target='_blank'>${item.url}</a></td></tr>`
           );
         });
         $(".results-panel").append("</tbody>");
       },
-      error: function() {
+      error: function () {
         console.log("error");
         enableUploadButton();
-      }
+      },
     });
   }
 </script>
