@@ -1,6 +1,7 @@
 import io
 
 from django.conf import settings
+from django.db.models import Sum
 from django.views.generic import TemplateView
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
@@ -8,34 +9,29 @@ from googleapiclient.http import MediaIoBaseDownload
 from rest_framework import views, status
 from rest_framework.response import Response
 
-from uploader.serializers import GooglePhotosUploadInputSerializer
-from uploader.wiki_uploader import WikiUploader
-
 from uploader.models import FileUpload
+from uploader.serializers import GooglePhotosUploadInputSerializer
+from uploader.wiki_uploader import WikiUploader, get_initial_page_text
 
 
 class HomePageView(TemplateView):
     template_name = "home.html"
 
     def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-
-        count = 0
-        for record in FileUpload.objects.all():
-            count += record.number_of_files
-        context["count"] = count
+        context = super(HomePageView, self).get_context_data(**kwargs)
+        context["count"] = FileUpload.objects.aggregate(Sum("number_of_files"))[
+            "number_of_files__sum"
+        ]
         return context
 
 
 class UploadPageView(TemplateView):
     template_name = "upload.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(UploadPageView, self).get_context_data()
-        context["developer_key"] = settings.GOOGLE_API_DEV_KEY
-        context["client_id"] = settings.GOOGLE_CLIENT_ID
-        context["google_app_id"] = settings.GOOGLE_APP_ID
-        return context
+    extra_context = {
+        "developer_key": settings.GOOGLE_API_DEV_KEY,
+        "client_id": settings.GOOGLE_CLIENT_ID,
+        "google_app_id": settings.GOOGLE_APP_ID,
+    }
 
 
 class FileUploadViewSet(views.APIView):
@@ -80,15 +76,17 @@ class FileUploadViewSet(views.APIView):
             while done is False:
                 download_status, done = downloader.next_chunk()
 
-            uploaded, image_info = wiki_uploader.upload_file(
-                file_name=file["name"],
-                file_stream=fh,
-                date_created=file["date_created"],
+            page_text = get_initial_page_text(
                 description=file["description"],
                 license=file["license"],
+                date_created=file["date_created"],
                 author=file["author"],
                 source=file["source"],
                 location=file["location"],
+            )
+
+            uploaded, image_info = wiki_uploader.upload_file(
+                file_name=file["name"], file_stream=fh, description=page_text
             )
             if uploaded:
                 uploaded_results.append(image_info)
