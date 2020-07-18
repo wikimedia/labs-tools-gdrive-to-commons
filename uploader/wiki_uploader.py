@@ -1,5 +1,6 @@
 import io
 import logging
+
 import mwclient
 
 
@@ -33,6 +34,7 @@ class WikiUploader(object):
             ignore=True,
             comment="Uploaded using gdrive-to-commons tool",
         )
+
         debug_information = f"Uploaded: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
         logging.debug(debug_information)
         upload_response = upload_result.get("result")
@@ -49,8 +51,8 @@ def get_initial_page_text(
     date_created: str,
     source: str,
     author: str,
+    location: dict,
     category: str = None,
-    location: dict = None,
 ) -> str:
     """
     Function used to generate wiki text for the page of the uploaded image

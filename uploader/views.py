@@ -7,6 +7,8 @@ from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseDownload
 from rest_framework import views, status
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from uploader.models import FileUpload
@@ -35,6 +37,9 @@ class UploadPageView(TemplateView):
 
 
 class FileUploadViewSet(views.APIView):
+    authentication_classes = [SessionAuthentication]
+    permission_classes = [IsAuthenticated]
+
     def get_google_drive_service(self, access_token):
         credentials = Credentials(token=access_token)
         service = build("drive", "v3", credentials=credentials)
