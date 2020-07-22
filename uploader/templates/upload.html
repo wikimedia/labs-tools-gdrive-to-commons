@@ -27,16 +27,15 @@
                             </div>
                         </div>
 
-                        <h5 class="app-desc text-center">Your selected file(s):</h5>
-                        <div class="table-responsive">
-                            <table class="table files-table" id="picked-files-table">
-                            </table>
-                        </div>
+                        <form action="javascript:void(0);" class="form-signin" onsubmit="uploadFiles()">
+                            <h5 class="app-desc text-center">Your selected file(s):</h5>
+                            <div class="table-responsive">
+                                <table class="table files-table" id="picked-files-table">
+                                </table>
+                            </div>
 
-                        <form class="form-signin">
-                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="button"
-                                    id="upload-button"
-                                    onclick="uploadFiles()">
+                            <button class="btn btn-lg btn-primary btn-block text-uppercase" type="submit"
+                                    id="upload-button">
                                 Upload to Wikimedia Commons <i class="fas fa-caret-right"></i>
                             </button>
                             <hr class="my-4"/>
@@ -198,7 +197,7 @@
   var fileStagingTable;
 
   function TDate(id) {
-    var dc = document.getElementById(`dateCreated` + id).value;
+    var dc = document.getElementById(`dateCreated-` + id).value;
     var Today = new Date();
     var dd = Today.getDate();
     var mm = Today.getMonth() + 1; //January is 0!
@@ -212,7 +211,7 @@
     var dmy = yyyy + "-" + mm + "-" + dd;
     if (new Date(dc).getTime() > Today.getTime()) {
       alert("The Date created must be Less than or Equal to today's date");
-      document.getElementById(`dateCreated` + id).value = dmy;
+      document.getElementById(`dateCreated-` + id).value = dmy;
       return;
       //return document.getElementById("datecreated").value = null;
     }
@@ -321,17 +320,44 @@
             generateGdriveThumbNailLink(data.id) +
             "'></td>";
           cellContents +=
-            "<td><div><strong>Image title*</strong><input class='form-control' id='title" +
+            "<td><div><strong>Image title*</strong><input class='form-control' id='title-" +
             data.id +
             "' type='text' value='" +
             data.name +
-            "'></div>";
+            "' required ></div>";
           cellContents +=
-            "<div><strong>Description*</strong><textarea class='form-control' id='description" +
+            "<div><strong>Description*</strong><textarea class='form-control' id='description-" +
             data.id +
             "' type='text',value='" +
             data.description +
-            "'></textarea></div>";
+            "' required></textarea></div>";
+
+          cellContents += "<div><strong>Release rights*</strong><br/>";
+          cellContents += "<input  type='radio' " +
+                "id='own-work-" + data.id + "' name='release_rights" + data.id + "' " +
+                "value='own-work' onclick='changeReleaseRights(this);'>\n";
+          cellContents += "<label for='own-work-" + data.id + "'>This file is my own work.</label><br/>";
+          cellContents += "<div class='alert alert-dark' id='declaration-" + data.id + "' role='alert' style='display:none;'  ><p style='padding: 5px 10px;'>I, {{ user.username }}, the copyright holder of this work, irrevocably grant anyone the right to use this work under the license selected below.</p></div>"
+          cellContents += "<input type='radio' id='not-own-work-" + data.id + "' name='release_rights" + data.id + "'" +
+                " value='not-own-work' onclick='changeReleaseRights(this);' checked>\n";
+          cellContents += "<label for='not-own-work-" + data.id + "'>This file is not my own work.</label>";
+          cellContents += "</div>";
+
+          cellContents +=
+            "<div id='author-block-" +
+            data.id +
+            "' >" +
+            "<strong>Author*</strong><input class='form-control' id='author-" +
+            data.id +
+            "' type='text' required></div>";
+          cellContents +=
+            "<div id='source-block-" +
+            data.id +
+            "'>" +
+            "<strong>Source*</strong><input class='form-control' id='source-" +
+            data.id +
+            "' type='text' required></div>";
+
           cellContents +=
             "<div><strong>License*</strong>" +
             `{% include 'licenses.html' %}` +
@@ -340,26 +366,19 @@
             "<div><strong>Date work was created or first published*</strong> " +
             `{% include 'datepicker.html' %}` +
             "</div>";
-          cellContents +=
-            "<div><strong>Author*</strong><input class='form-control' id='author" +
-            data.id +
-            "' type='text'></div>";
-          cellContents +=
-            "<div><strong>Source*</strong><input class='form-control' id='source" +
-            data.id +
-            "' type='text'></div>";
+
 
           cellContents += "<div class='row' style='margin: 0px;'>";
           cellContents +=
-            "<div class='col-xs-12 col-md-4'><strong>Latitude</strong><input class='form-control' id='latitude" +
+            "<div class='col-xs-12 col-md-4'><strong>Latitude</strong><input class='form-control' id='latitude-" +
             data.id +
             "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
           cellContents +=
-            "<div class='col-xs-12 col-md-4'><strong>Longitude</strong><input class='form-control' id='longitude" +
+            "<div class='col-xs-12 col-md-4'><strong>Longitude</strong><input class='form-control' id='longitude-" +
             data.id +
             "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
           cellContents +=
-            "<div class='col-xs-12 col-md-4'><strong>Heading</strong><input class='form-control' id='heading" +
+            "<div class='col-xs-12 col-md-4'><strong>Heading</strong><input class='form-control' id='heading-" +
             data.id +
             "' type='number' placeholder='0.0' step='1' min='0' max='360'></div>";
           cellContents += "</div>";
@@ -385,6 +404,60 @@
     }
   }
 
+  function changeReleaseRights(userSelection) {
+    let isOwnWork = userSelection.value == "own-work";
+
+    let id = userSelection.id.split('own-work-').slice(-1)[0] ;
+    let author = document.getElementById("author-" + id);
+    let authorBlock = document.getElementById("author-block-" + id);
+    let source = document.getElementById("source-" + id);
+    let sourceBlock = document.getElementById("source-block-" + id);
+    let declaration = document.getElementById("declaration-" + id);
+
+    let licenseField = document.getElementById('license-'+id);
+    licenseField.value = "";
+
+    let ownWorkLicenses = Array.from(licenseField.getElementsByClassName("own-work-license"));
+    let notOwnWorkLicenses = Array.from(licenseField.getElementsByClassName("not-own-work-license"));
+
+    if (isOwnWork) {
+      author.value = "[[User:{{ user.username }}|{{ user.username }}]]";
+      authorBlock.style.display = "none";
+
+      source.value ="{% templatetag openvariable %}own{% templatetag closevariable %}";
+      sourceBlock.style.display = "none";
+
+      declaration.style.display = "block";
+
+      notOwnWorkLicenses.forEach(function (element) {
+          element.style.display = "none";
+      })
+
+      ownWorkLicenses.forEach(function (element) {
+          element.style.display = "block";
+      });
+
+    } else {
+
+      author.value = "";
+      authorBlock.style.display = "block";
+
+      source.value = "";
+      sourceBlock.style.display = "block";
+
+      declaration.style.display = "none";
+
+      ownWorkLicenses.forEach((element) => {
+          element.style.display = "none";
+      });
+
+      notOwnWorkLicenses.forEach((element) => {
+            element.style.display = "block";
+      });
+
+    }
+  }
+
   function uploadFiles() {
     // Disable the button first.
     $("#upload-button").prop("disabled", true);
@@ -401,16 +474,16 @@
       stagedImagesData.push(
         {
           id: imageId,
-          date_created: document.getElementById(`dateCreated${imageId}`).value,
-          license: document.getElementById(`license${imageId}`).value,
-          name: document.getElementById(`title${imageId}`).value,
-          description: document.getElementById(`description${imageId}`).value,
-          author: document.getElementById(`author${imageId}`).value,
-          source: document.getElementById(`source${imageId}`).value,
+          date_created: document.getElementById(`dateCreated-${imageId}`).value,
+          license: document.getElementById(`license-${imageId}`).value,
+          name: document.getElementById(`title-${imageId}`).value,
+          description: document.getElementById(`description-${imageId}`).value,
+          author: document.getElementById(`author-${imageId}`).value,
+          source: document.getElementById(`source-${imageId}`).value,
           location: {
-            latitude: document.getElementById(`latitude${imageId}`).value,
-            longitude: document.getElementById(`longitude${imageId}`).value,
-            heading: document.getElementById(`heading${imageId}`).value,
+            latitude: document.getElementById(`latitude-${imageId}`).value,
+            longitude: document.getElementById(`longitude-${imageId}`).value,
+            heading: document.getElementById(`heading-${imageId}`).value,
           }
         }
       );
