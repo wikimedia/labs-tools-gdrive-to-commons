@@ -35,7 +35,12 @@ class GooglePhotosUploadInputSerializerTest(TestCase):
             ],
         }
         [
-            x.update({"location": {"latitude": "", "longitude": "", "heading": "",},})
+            x.update(
+                {
+                    "location": {"latitude": "", "longitude": "", "heading": "",},
+                    "categories": ["STRING"],
+                }
+            )
             for x in data["fileList"]
         ]
         serializer1 = self.serializer_class(data=data)
@@ -43,7 +48,10 @@ class GooglePhotosUploadInputSerializerTest(TestCase):
 
         [
             x.update(
-                {"location": {"latitude": "10", "longitude": "10", "heading": "",},}
+                {
+                    "location": {"latitude": "10", "longitude": "10", "heading": "",},
+                    "categories": ["STRING", "STRING2"],
+                }
             )
             for x in data["fileList"]
         ]
@@ -52,7 +60,14 @@ class GooglePhotosUploadInputSerializerTest(TestCase):
 
         [
             x.update(
-                {"location": {"latitude": "10", "longitude": "20", "heading": "120",},}
+                {
+                    "location": {
+                        "latitude": "10",
+                        "longitude": "20",
+                        "heading": "120",
+                    },
+                    "categories": ["STRING"],
+                }
             )
             for x in data["fileList"]
         ]
@@ -78,6 +93,7 @@ class FileSerializerTest(TestCase):
                     "license",
                     "author",
                     "source",
+                    "categories",
                     "location",
                 ]
             ),
@@ -93,6 +109,7 @@ class FileSerializerTest(TestCase):
             "license": "STRING",
             "author": "STRING",
             "source": "STRING",
+            "categories": ["STRING", "STRING2"],
             "location": {"latitude": "", "longitude": "", "heading": "",},
         }
 
@@ -104,6 +121,7 @@ class FileSerializerTest(TestCase):
             "license": "STRING",
             "author": "STRING",
             "source": "STRING",
+            "categories": ["STRING"],
             "location": {"latitude": "10", "longitude": "10", "heading": "",},
         }
 
@@ -115,6 +133,7 @@ class FileSerializerTest(TestCase):
             "license": "STRING",
             "author": "STRING",
             "source": "STRING",
+            "categories": ["STRING"],
             "location": {"latitude": "10", "longitude": "10", "heading": "10",},
         }
 
@@ -135,7 +154,7 @@ class LocationSerializerTest(TestCase):
         serializer = self.serializer_class()
         self.assertEqual(
             sorted(list(serializer.data.keys())),
-            sorted(["latitude", "longitude", "heading",]),
+            sorted(["latitude", "longitude", "heading"]),
         )
 
     @tag("serializers")

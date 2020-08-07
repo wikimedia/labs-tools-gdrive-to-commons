@@ -78,6 +78,7 @@ class FileUploadViewSetTest(APITestCase):
                     "license": "STRING",
                     "author": "STRING",
                     "source": "STRING",
+                    "categories": ["STRING"],
                     "location": {"latitude": "10", "longitude": "10", "heading": "10",},
                 }
             ],
@@ -110,6 +111,7 @@ class FileUploadViewSetTest(APITestCase):
                     "license": "STRING",
                     "author": "STRING",
                     "source": "STRING",
+                    "categories": "STRING",
                     "location": {"latitude": "10", "longitude": "10", "heading": "",},
                 }
             ],

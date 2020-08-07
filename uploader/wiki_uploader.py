@@ -1,5 +1,6 @@
 import io
 import logging
+from typing import List
 
 import mwclient
 
@@ -52,7 +53,7 @@ def get_initial_page_text(
     source: str,
     author: str,
     location: dict,
-    category: str = None,
+    categories: List[str] = None,
 ) -> str:
     """
     Function used to generate wiki text for the page of the uploaded image
@@ -62,7 +63,12 @@ def get_initial_page_text(
     date_created = f"|date={date_created}\n"
     source = f"|source={source}\n"
     author = f"|author={author}\n"
-    category = "" if not category else f"[[Category:{category}]]\n"
+
+    if not categories:
+        categories_string = ""
+    else:
+        formatted_category_list = [f"[[{category}]]" for category in categories]
+        categories_string = "\n".join(formatted_category_list)
 
     latitude = "" if not location["latitude"] else f"|{location['latitude']}\n"
     longitude = "" if not location["longitude"] else f"|{location['longitude']}\n"
@@ -82,5 +88,6 @@ def get_initial_page_text(
 
 =={{{{int:license-header}}}}==
 {{{{{license}}}}}
-{category}
+
+{categories_string}
 """

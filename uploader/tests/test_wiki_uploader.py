@@ -1,5 +1,5 @@
-from unittest import mock
 import io
+from unittest import mock
 
 import mwclient
 from django.test import TestCase, tag
@@ -52,50 +52,3 @@ class WikiUploaderTest(TestCase):
         self.assertFalse(status)
         self.assertEqual(info, {})
         self.assertTrue(Site.called)
-
-
-class HelperFunctionTest(TestCase):
-    @tag("wiki_uploader")
-    def test_get_initial_page_text_valid_data(self):
-        data = {
-            "license": "STRING",
-            "description": "STRING",
-            "category": "STRING",
-            "date_created": "2000-01-01",
-            "source": "STRING",
-            "author": "STRING",
-            "location": {"latitude": "", "longitude": "", "heading": "",},
-        }
-        res = get_initial_page_text(**data)
-
-        [self.assertIn(value, res) for value in data.values() if value is str]
-
-    @tag("wiki_uploader")
-    def test_get_initial_page_text_valid_data_lat_lng(self):
-        data = {
-            "license": "STRING",
-            "description": "STRING",
-            "category": "STRING",
-            "date_created": "2000-01-01",
-            "source": "STRING",
-            "author": "STRING",
-            "location": {"latitude": "10", "longitude": "20", "heading": "",},
-        }
-        res = get_initial_page_text(**data)
-
-        [self.assertIn(value, res) for value in data.values() if value is str]
-
-    @tag("wiki_uploader")
-    def test_get_initial_page_text_valid_data_lat_lng_heading(self):
-        data = {
-            "license": "STRING",
-            "description": "STRING",
-            "category": "STRING",
-            "date_created": "2000-01-01",
-            "source": "STRING",
-            "author": "STRING",
-            "location": {"latitude": "20", "longitude": "10", "heading": "120",},
-        }
-        res = get_initial_page_text(**data)
-
-        [self.assertIn(value, res) for value in data.values() if value is str]

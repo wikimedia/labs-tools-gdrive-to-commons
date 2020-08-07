@@ -117,9 +117,9 @@ LOGIN_REDIRECT_URL = "upload_page"
 LOGOUT_REDIRECT_URL = "home_page"
 SOCIAL_AUTH_URL_NAMESPACE = "social"
 
-CSP_DEFAULT_SRC = ("'self'", "*.google.com   ")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'")
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "*.google.com")
+CSP_DEFAULT_SRC = ("'self'", "*.google.com")
+CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "code.jquery.com")
+CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "*.google.com", "code.jquery.com")
 CSP_IMG_SRC = (
     "'self'",
     "www.w3.org",
@@ -132,5 +132,7 @@ CSP_FONT_SRC = (
     "'self'",
     "'unsafe-inline'",
 )
+
+CSP_CONNECT_SRC = ("'self'", "commons.wikimedia.org")
 
 from gdrive_to_commons.local_settings import *

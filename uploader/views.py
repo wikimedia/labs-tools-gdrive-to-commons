@@ -88,6 +88,7 @@ class FileUploadViewSet(views.APIView):
                 author=file["author"],
                 source=file["source"],
                 location=file["location"],
+                categories=file["categories"],
             )
 
             uploaded, image_info = wiki_uploader.upload_file(
