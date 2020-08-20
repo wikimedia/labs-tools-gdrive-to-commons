@@ -67,7 +67,7 @@ class FileUploadViewSet(views.APIView):
             access_secret=social_auth.get("oauth_token_secret", None),
         )
 
-        uploaded_results = []
+        upload_responses = []
 
         file_upload_log = FileUpload(username=request.user.username)
 
@@ -94,10 +94,22 @@ class FileUploadViewSet(views.APIView):
             uploaded, image_info = wiki_uploader.upload_file(
                 file_name=file["name"], file_stream=fh, description=page_text
             )
+
+            upload_status = {
+                "details": image_info,
+                "name": file["name"],
+                "id": file["id"],
+            }
+
             if uploaded:
-                uploaded_results.append(image_info)
+                upload_status.update({"status": "SUCCESS"})
                 count += 1
+            else:
+                upload_status.update({"status": "ERROR"})
+
+            upload_responses.append(upload_status)
+
         file_upload_log.number_of_files = count
         file_upload_log.save()
 
-        return Response(data=uploaded_results, status=status.HTTP_200_OK)
+        return Response(data=upload_responses, status=status.HTTP_200_OK)

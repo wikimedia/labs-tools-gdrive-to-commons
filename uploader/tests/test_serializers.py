@@ -37,7 +37,11 @@ class GooglePhotosUploadInputSerializerTest(TestCase):
         [
             x.update(
                 {
-                    "location": {"latitude": "", "longitude": "", "heading": "",},
+                    "location": {
+                        "latitude": "",
+                        "longitude": "",
+                        "heading": "",
+                    },
                     "categories": ["STRING"],
                 }
             )
@@ -49,7 +53,11 @@ class GooglePhotosUploadInputSerializerTest(TestCase):
         [
             x.update(
                 {
-                    "location": {"latitude": "10", "longitude": "10", "heading": "",},
+                    "location": {
+                        "latitude": "10",
+                        "longitude": "10",
+                        "heading": "",
+                    },
                     "categories": ["STRING", "STRING2"],
                 }
             )
@@ -110,7 +118,11 @@ class FileSerializerTest(TestCase):
             "author": "STRING",
             "source": "STRING",
             "categories": ["STRING", "STRING2"],
-            "location": {"latitude": "", "longitude": "", "heading": "",},
+            "location": {
+                "latitude": "",
+                "longitude": "",
+                "heading": "",
+            },
         }
 
         data2 = {
@@ -122,7 +134,11 @@ class FileSerializerTest(TestCase):
             "author": "STRING",
             "source": "STRING",
             "categories": ["STRING"],
-            "location": {"latitude": "10", "longitude": "10", "heading": "",},
+            "location": {
+                "latitude": "10",
+                "longitude": "10",
+                "heading": "",
+            },
         }
 
         data3 = {
@@ -134,7 +150,11 @@ class FileSerializerTest(TestCase):
             "author": "STRING",
             "source": "STRING",
             "categories": ["STRING"],
-            "location": {"latitude": "10", "longitude": "10", "heading": "10",},
+            "location": {
+                "latitude": "10",
+                "longitude": "10",
+                "heading": "10",
+            },
         }
 
         serializer1 = self.serializer_class(data=data1)

@@ -79,7 +79,11 @@ class FileUploadViewSetTest(APITestCase):
                     "author": "STRING",
                     "source": "STRING",
                     "categories": ["STRING"],
-                    "location": {"latitude": "10", "longitude": "10", "heading": "10",},
+                    "location": {
+                        "latitude": "10",
+                        "longitude": "10",
+                        "heading": "10",
+                    },
                 }
             ],
         }
@@ -112,7 +116,11 @@ class FileUploadViewSetTest(APITestCase):
                     "author": "STRING",
                     "source": "STRING",
                     "categories": "STRING",
-                    "location": {"latitude": "10", "longitude": "10", "heading": "",},
+                    "location": {
+                        "latitude": "10",
+                        "longitude": "10",
+                        "heading": "",
+                    },
                 }
             ],
         }

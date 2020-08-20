@@ -21,7 +21,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["tools.wmflabs.org", "*"]
+ALLOWED_HOSTS = ["tools.wmflabs.org", ".toolforge.org", "*"]
+
 
 # Application definition
 
@@ -126,6 +127,7 @@ CSP_IMG_SRC = (
     "data:",
     "*.google.com",
     "*.googleusercontent.com",
+    "*.wikimedia.org",
 )
 CSP_FRAME_SRC = ("'self'", "'unsafe-inline'", "*.google.com")
 CSP_FONT_SRC = (
@@ -133,6 +135,6 @@ CSP_FONT_SRC = (
     "'unsafe-inline'",
 )
 
-CSP_CONNECT_SRC = ("'self'", "commons.wikimedia.org")
+CSP_CONNECT_SRC = ("'self'", "*.wikimedia.org")
 
 from gdrive_to_commons.local_settings import *

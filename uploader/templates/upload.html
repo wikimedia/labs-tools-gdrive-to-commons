@@ -128,20 +128,40 @@
                             </div>
                         </div>
 
-                        <h5 class="app-desc text-center">
-                            The following files were uploaded!
-                        </h5>
+                        <div id="results-panel">
+                            <h5 class="app-desc text-center">
+                                The following files were uploaded!
+                            </h5>
 
-                        <div class="table-responsive mb-3">
-                            <table class="table mb-0 results-panel">
-                                <thead>
-                                <tr>
-                                    <th style="width: 105px">Preview</th>
-                                    <th>Name of file</th>
-                                    <th>Link to upload</th>
-                                </tr>
-                                </thead>
-                            </table>
+                            <div class="table-responsive mb-3">
+                                <table class="table mb-0 results-panel">
+                                    <thead>
+                                    <tr>
+                                        <th style="width: 105px">Preview</th>
+                                        <th>Name of file</th>
+                                        <th>Link to upload</th>
+                                    </tr>
+                                    </thead>
+                                </table>
+
+                            </div>
+                        </div>
+                        <div id="error-panel">
+                            <h5 class="app-desc text-center">
+                                The following files have some errors. Try again!
+                            </h5>
+
+                            <div class="table-responsive mb-3">
+                                <table class="table mb-0 error-panel">
+                                    <thead>
+                                        <tr>
+                                            <th style="width: 105px">Preview</th>
+                                            <th>Name of file</th>
+                                            <th>Error Message</th>
+                                        </tr>
+                                    </thead>
+                                </table>
+                            </div>
                         </div>
 
                         <a class="btn btn-lg btn-primary btn-block text-uppercase" href='{% url "upload_page" %}'>
@@ -609,13 +629,40 @@
         $(".step-1-2").hide();
         $(".step-4").show();
         $(".results-panel").append("<tbody>");
+        $(".error-panel").append("<tbody>");
         enableUploadButton();
+
+        let successCount = 0, errorCount = 0;
+
         data.forEach(function (item) {
-          $(".results-panel").append(
-            `<tr><td><img src='${item.url}' style='width: 50px'></td><td>${item.canonicaltitle}</td><td><a href='${item.url}' target='_blank'>${item.url}</a></td></tr>`
-          );
+          if (item.status == "SUCCESS"){
+            successCount++;
+            $(".results-panel").append(
+              `<tr><td><img src='${item.details.url}' style='width: 50px'></td><td>${item.name}</td><td><a href='${item.details.descriptionurl}' target='_blank'>Show uploaded file</a></td></tr>`
+            );
+          } else {
+              errorCount++;
+              $(".error-panel").append(
+              `<tr><td><img src='${generateGdriveThumbNailLink(item.id)}' style='width: 50px'></td><td>${item.name}</td><td>${item.details}</td></tr>`
+            );
+
+          }
         });
+
+
         $(".results-panel").append("</tbody>");
+        $(".error-panel").append("</tbody>");
+
+        if (successCount == 0 ){
+            $("#results-panel").hide();
+        }
+
+        if (errorCount == 0 ){
+            $("#error-panel").hide();
+
+        }
+
+
       },
       error: function () {
         console.log("error");

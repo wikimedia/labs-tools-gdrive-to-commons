@@ -27,23 +27,36 @@ class WikiUploader(object):
     def upload_file(
         self, file_name: str, file_stream: io.BytesIO, description: str
     ) -> (bool, dict):
+        try:
+            upload_result = self.mw_client.upload(
+                file=file_stream,
+                filename=file_name,
+                description=description,
+                ignore=True,
+                comment="Uploaded using gdrive-to-commons tool",
+            )
+        except mwclient.errors.APIError as e:
+            logging.debug(
+                f"Failed to upload: {file_name} to: {self.mw_client.host}, more information: {e}"
+            )
+            return False, e.info
 
-        upload_result = self.mw_client.upload(
-            file=file_stream,
-            filename=file_name,
-            description=description,
-            ignore=True,
-            comment="Uploaded using gdrive-to-commons tool",
-        )
+        upload_response = "Error"
+        if "result" in upload_result:
+            upload_response = upload_result.get("result")
+        elif "upload" in upload_result:
+            upload_response = upload_result.get("upload").get("result")
+            upload_result = upload_result.get("upload")
 
-        debug_information = f"Uploaded: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
-        logging.debug(debug_information)
-        upload_response = upload_result.get("result")
-        logging.debug(upload_response)
-        if not upload_response == "Success":
-            return False, {}
-        else:
+        if upload_response == "Success":
+            debug_information = f"Uploaded: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
+            logging.debug(debug_information)
             return True, upload_result["imageinfo"]
+        else:
+            logging.debug(
+                f"Failed to upload: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
+            )
+            return False, upload_result
 
 
 def get_initial_page_text(
