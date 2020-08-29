@@ -133,3 +133,5 @@ CSP_FONT_SRC = (
 CSP_CONNECT_SRC = ("'self'", "*.wikimedia.org")
 
 from gdrive_to_commons.local_settings import *
+
+STATICFILES_DIRS = [os.path.join(BASE_DIR, "assets")]
