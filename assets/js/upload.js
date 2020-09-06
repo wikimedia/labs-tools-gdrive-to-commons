@@ -47,6 +47,10 @@ function onGoogleUploadButtonClick() {
   gapi.load("picker", {"callback": onPickerApiLoad});
 }
 
+function onAddMore() {
+  gapi.load("picker", {"callback": onPickerApiLoad});
+}
+
 function onAuthApiLoad() {
   window.gapi.auth.authorize(
     {
@@ -152,66 +156,74 @@ function initCategories() {
 // A simple callback implementation.
 function pickerCallback(data) {
   if (data.action == google.picker.Action.PICKED) {
-    data.docs.forEach((item) =>
-      pickedFiles.push({
-        "name": item.name,
-        "id": item.id,
-      })
-    );
+    if (fileStagingTable !== undefined) {
+      let new_files = [];
+      data.docs.forEach((item) =>
+        new_files.push({
+          "name": item.name,
+          "id": item.id,
+        }));
+      fileStagingTable.addData(new_files);
+    } else {
+      data.docs.forEach((item) =>
+        pickedFiles.push({
+          "name": item.name,
+          "id": item.id,
+        }));
 
-    $(".step-3").show();
-    $(".step-1-2").hide();
+      $(".step-3").show();
+      $(".step-1-2").hide();
 
-    fileStagingTable = new Tabulator("#picked-files-table", {
-      "data": pickedFiles,
-      "layout": "fitColumns",
-      "headerSort": false,
-      "responsiveLayout": "collapse",
+      fileStagingTable = new Tabulator("#picked-files-table", {
+        "data": pickedFiles,
+        "layout": "fitColumns",
+        "headerSort": false,
+        "responsiveLayout": "collapse",
 
-      "resizableColumns": false,
-      "rowFormatter": function (row) {
-        var element = row.getElement();
-        var data = row.getData();
-        var width = element.offsetWidth;
-        var rowTable;
-        var cellContents;
-        let username = JSON.parse(document.getElementById("username").textContent);
+        "resizableColumns": false,
+        "rowFormatter": function (row) {
+          var element = row.getElement();
+          var data = row.getData();
+          var width = element.offsetWidth;
+          var rowTable;
+          var cellContents;
+          let username = JSON.parse(document.getElementById("username").textContent);
 
-        //clear current row data
-        if (element.id != "row" + data.id)
-          while (element.firstChild) element.removeChild(element.firstChild);
+          //clear current row data
+          if (element.id != "row" + data.id)
+            while (element.firstChild) element.removeChild(element.firstChild);
 
-        //define a table layout structure and set width of row
-        rowTable = document.createElement("table");
-        element.id = "row" + data.id;
-        rowTable.style.width = "100%";
+          //define a table layout structure and set width of row
+          rowTable = document.createElement("table");
+          element.id = "row" + data.id;
+          rowTable.style.width = "100%";
 
-        rowTabletr = document.createElement("tr");
+          rowTabletr = document.createElement("tr");
 
-        //add image on left of row
-        cellContents = "<td>";
-        cellContents += `<img width='200' src='${generateGdriveThumbNailLink(data.id)}' alt="Image"></td>`;
-        cellContents += `<td><div><strong>Image title*</strong><input class='form-control' id='title-${data.id}' type='text' value='${data.name}' required ></div>`;
-        cellContents += `<div><strong>Description*</strong><textarea class='form-control' id='description-${data.id}' type='text' value='${data.description}' required></textarea></div>`;
+          //add image on left of row
+          cellContents = "<td>";
+          cellContents += `<img width='200' src='${generateGdriveThumbNailLink(data.id)}' alt="Image"></td>`;
+          cellContents += `<td><div><strong>Image title*</strong><input class='form-control' id='title-${data.id}' type='text' value='${data.name}' required ></div>`;
+          cellContents += `<div><strong>Description*</strong><textarea class='form-control' id='description-${data.id}' type='text' value='${data.description}' required></textarea></div>`;
 
-        cellContents += "<div><strong>Release rights*</strong><br/>";
-        cellContents += `<input  type='radio' id='own-work-${data.id}' name='release_rights${data.id}' value='own-work' onclick='changeReleaseRights(this);'>\n`;
-        cellContents += `<label for='own-work-${data.id}'>This file is my own work.</label><br/>`;
-        cellContents +=
-          `<div class='alert alert-dark' id='declaration-${data.id}' role='alert' style='display:none;'>
+          cellContents += "<div><strong>Release rights*</strong><br/>";
+          cellContents += `<input  type='radio' id='own-work-${data.id}' name='release_rights${data.id}' value='own-work' onclick='changeReleaseRights(this);'>\n`;
+          cellContents += `<label for='own-work-${data.id}'>This file is my own work.</label><br/>`;
+          cellContents +=
+            `<div class='alert alert-dark' id='declaration-${data.id}' role='alert' style='display:none;'>
                     <p style='padding: 5px 10px;'>I, ${username}, the copyright holder of this work, irrevocably grant anyone the right to use this work under the license selected below.</p></div>`;
-        cellContents += `<input type='radio' id='not-own-work-${data.id}' name='release_rights${data.id}'  value='not-own-work' onclick='changeReleaseRights(this);' checked>\n`;
-        cellContents += `<label for='not-own-work-${data.id}'>This file is not my own work.</label>`;
-        cellContents += "</div>";
+          cellContents += `<input type='radio' id='not-own-work-${data.id}' name='release_rights${data.id}'  value='not-own-work' onclick='changeReleaseRights(this);' checked>\n`;
+          cellContents += `<label for='not-own-work-${data.id}'>This file is not my own work.</label>`;
+          cellContents += "</div>";
 
-        cellContents +=
-          `<div id='author-block-${data.id}' ><strong>Author*</strong><input class='form-control' id='author-${data.id}' type='text' required></div>`;
-        cellContents +=
-          `<div id='source-block-${data.id}'><strong>Source*</strong><input class='form-control' id='source-${data.id}' type='text' required></div>`;
+          cellContents +=
+            `<div id='author-block-${data.id}' ><strong>Author*</strong><input class='form-control' id='author-${data.id}' type='text' required></div>`;
+          cellContents +=
+            `<div id='source-block-${data.id}'><strong>Source*</strong><input class='form-control' id='source-${data.id}' type='text' required></div>`;
 
-        cellContents +=
-          "<div><strong>License*</strong>" +
-          `<select name="wpLicense" id="license-${data.id}" class="form-control" required>
+          cellContents +=
+            "<div><strong>License*</strong>" +
+            `<select name="wpLicense" id="license-${data.id}" class="form-control" required>
             <option title="none" value="">None selected</option>
             <option class="own-work-license" title="self|cc-by-sa-4.0" value="self|cc-by-sa-4.0" style="display: none;">
                 Creative Commons Attribution ShareAlike 4.0
@@ -329,40 +341,52 @@ function pickerCallback(data) {
                 copyright holder is properly attributed
             </option>
           </select>` +
-          "</div>";
-        cellContents +=
-          "<div><strong>Date work was created or first published*</strong> " +
-          `<input class="form-control" type="date" name="dateCreated" id="dateCreated-${data.id}" onchange="TDate('${data.id}')" required />` +
-          "</div>";
+            "</div>";
+          cellContents +=
+            "<div><strong>Date work was created or first published*</strong> " +
+            `<input class="form-control" type="date" name="dateCreated" id="dateCreated-${data.id}" onchange="TDate('${data.id}')" required />` +
+            "</div>";
 
-        cellContents +=
-          `<strong>Category</strong>\n<select class='form-control category' id='category-${data.id}' multiple='multiple'></select>`;
+          cellContents +=
+            `<strong>Category</strong>\n<select class='form-control category' id='category-${data.id}' multiple='multiple'></select>`;
 
-        cellContents += "<div class='row' style='margin: 0;'>";
-        cellContents +=
-          `<div class='col-xs-12 col-md-4'><strong>Latitude</strong><input class='form-control' id='latitude-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
-        cellContents +=
-          `<div class='col-xs-12 col-md-4'><strong>Longitude</strong><input class='form-control' id='longitude-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
-        cellContents +=
-          `<div class='col-xs-12 col-md-4'><strong>Heading</strong><input class='form-control' id='heading-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
-        cellContents += "</div>";
+          cellContents += "<div class='row' style='margin: 0;'>";
+          cellContents +=
+            `<div class='col-xs-12 col-md-4'><strong>Latitude</strong><input class='form-control' id='latitude-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
+          cellContents +=
+            `<div class='col-xs-12 col-md-4'><strong>Longitude</strong><input class='form-control' id='longitude-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
+          cellContents +=
+            `<div class='col-xs-12 col-md-4'><strong>Heading</strong><input class='form-control' id='heading-${data.id}' type='number' placeholder='0.0' step='1' min='0' max='360'></div>`;
+          cellContents += "</div>";
 
-        cellContents +=
-          `<div><button type='button' class='btn btn-danger' onclick='removeRow("${data.id}")' >Delete</button></div>`;
-        cellContents += "</td>";
+          cellContents +=
+            `<div><button type='button' class='btn btn-danger' onclick='removeRow("${data.id}")' >Delete</button></div>`;
+          cellContents += "</td>";
 
-        rowTabletr.innerHTML = cellContents;
-        rowTable.appendChild(rowTabletr);
-        element.append(rowTable);
-      },
-      "columns": [
-        {
-          "title": "Selected Files",
-          "responsive": 0,
+          rowTabletr.innerHTML = cellContents;
+          rowTable.appendChild(rowTabletr);
+          element.append(rowTable);
         },
-      ],
-    });
-    fileStagingTable.setData(pickedFiles);
+        "columns": [
+          {
+            "title": "<div class='row'>" +
+              "<div class='tabulator-col col-auto mr-auto'  style='align-self: center;'>\n" +
+              "<h4>Selected Files</h4>" +
+              "</div>" +
+              "<div class='tabulator-col col-auto'>" +
+
+              "<button class='btn btn-primary text-uppercase' type='button' onclick='onAddMore()' style='width:" +
+              " 10em;'>Add " +
+              "<i class='fas fa-plus'></i>" +
+              "</button>" +
+              "</div>" +
+              "</div>",
+            "responsive": 0,
+          },
+        ],
+      });
+      fileStagingTable.setData(pickedFiles);
+    }
   }
   initCategories();
 }
