@@ -1,32 +1,36 @@
 {% load static %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="{% url 'home_page' %}">GDrive to Commons</a>
+    <a class="navbar-brand" href="{% url 'home_page' %}">
+        <img src="{% static 'svg/gdrive_to_commons_logo.svg' %}" width="80"
+             height="30" alt="" class="d-inline-block align-top">
+        GDrive to Commons Uploader
+    </a>
 
-  <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav right">
-      {% if user.is_authenticated %}
-      <li class="nav-item dropdown">
-        <a
-          class="nav-link dropdown-toggle"
-          href="#"
-          id="navbarDropdown"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-        >
-          {{ user.username }}
-        </a>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav right">
+            {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a
+                            class="nav-link dropdown-toggle"
+                            href="#"
+                            id="navbarDropdown"
+                            role="button"
+                            data-toggle="dropdown"
+                            aria-haspopup="true"
+                            aria-expanded="false"
+                    >
+                        {{ user.username }}
+                    </a>
 
-        <div
-          class="dropdown-menu"
-          aria-labelledby="navbarDropdown"
-          style="width: 80%"
-        >
-          <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
-        </div>
-      </li>
-      {% endif %}
-    </ul>
-  </div>
+                    <div
+                            class="dropdown-menu"
+                            aria-labelledby="navbarDropdown"
+                            style="width: 80%"
+                    >
+                        <a class="dropdown-item" href="{% url 'logout' %}">Logout</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
 </nav>
