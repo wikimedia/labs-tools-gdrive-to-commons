@@ -39,6 +39,7 @@ function TDate(id) {
 function removeRow(id) {
   fileStagingTable.deleteRow(id).catch(function (error) {
   });
+  $("#upload-button").prop("disabled", fileStagingTable.rowManager.activeRowsCount === 0);
 }
 
 // Use the Google API Loader script to load the google.picker script.
@@ -164,6 +165,7 @@ function pickerCallback(data) {
           "id": item.id,
         }));
       fileStagingTable.addData(new_files);
+      $("#upload-button").prop("disabled", fileStagingTable.rowManager.activeRowsCount === 0);
     } else {
       data.docs.forEach((item) =>
         pickedFiles.push({
