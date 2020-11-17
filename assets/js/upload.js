@@ -7,7 +7,7 @@ var developerKey = JSON.parse(document.getElementById("developer-key").textConte
 var clientId = JSON.parse(document.getElementById("client-id").textContent);
 var appId = JSON.parse(document.getElementById("google-app-id").textContent);
 
-var scope = ["https://www.googleapis.com/auth/drive.photos.readonly"];
+var scope = ["https://www.googleapis.com/auth/drive.file", "https://www.googleapis.com/auth/drive.photos.readonly"];
 
 var pickedFiles = [];
 var pickerApiLoaded = false;
