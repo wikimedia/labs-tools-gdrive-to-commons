@@ -1,6 +1,5 @@
-from django.conf.urls import url
+from django.urls import path
 
 from uploader.views import FileUploadViewSet
 
-
-urlpatterns = [url(r"", FileUploadViewSet.as_view(), name="file_upload")]
+urlpatterns = [path(r"", FileUploadViewSet.as_view(), name="file_upload")]

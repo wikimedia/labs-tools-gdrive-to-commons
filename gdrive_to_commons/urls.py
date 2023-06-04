@@ -14,7 +14,6 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.conf import settings
-from django.conf.urls import url
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
@@ -23,14 +22,12 @@ from gdrive_to_commons.views import UserLogoutView, PrivacyPolicyTemplateView
 from uploader.views import HomePageView, UploadPageView
 
 urlpatterns = [
-    path(r"api/v1.0/upload/", include("uploader.urls")),
-    url(r"^upload/", UploadPageView.as_view(), name="upload_page"),
-    url(
-        r"^privacy-policy/", PrivacyPolicyTemplateView.as_view(), name="privacy_policy"
-    ),
-    url(r"^logout/", UserLogoutView.as_view(), name="logout"),
-    path(r"admin/", admin.site.urls),
-    url(r"^api-auth/", include("rest_framework.urls")),
-    url(r"^oauth/", include("social_django.urls", namespace="social")),
+    path("api/v1.0/upload/", include("uploader.urls")),
+    path("upload/", UploadPageView.as_view(), name="upload_page"),
+    path("privacy-policy/", PrivacyPolicyTemplateView.as_view(), name="privacy_policy"),
+    path("logout/", UserLogoutView.as_view(), name="logout"),
+    path("admin/", admin.site.urls),
+    path("api-auth/", include("rest_framework.urls")),
+    path("oauth/", include("social_django.urls", namespace="social")),
     path("", HomePageView.as_view(), name="home_page"),
 ] + static(settings.STATIC_URL_DEPLOYMENT, document_root=settings.STATIC_ROOT)
