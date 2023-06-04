@@ -4,7 +4,6 @@ from django.utils import timezone
 
 
 class FileUpload(models.Model):
-
     number_of_files = models.PositiveIntegerField("Number of Files Uploaded", default=0)
     username = models.CharField("Username", max_length=80)
     uploaded_at = models.DateTimeField("Uploaded at", auto_now=True, editable=False)
