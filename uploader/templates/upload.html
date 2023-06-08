@@ -55,6 +55,7 @@
                     </div>
                 </div>
             </div>
+        <pre id="content" style="white-space: pre-wrap;"></pre>
 
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto step-1-2">
                 <div class="card card-signin my-5">
@@ -192,7 +193,7 @@
 <!-- prettier-ignore -->
 {% block scripts %}
 <!-- prettier-ignore -->
-<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>
+{#<script type="text/javascript" src="https://apis.google.com/js/api.js"></script>#}
 <script
   type="text/javascript"
   src="{% static 'js/tabulator.min.js' %}"
@@ -212,7 +213,13 @@
   "{% url 'file_upload' %}"
 </script>
 
-<script src=" {% static 'js/upload.js' %}"></script>
+
 <script type="text/javascript"></script>
+<script src=" {% static 'js/uploader/globals.js' %}"></script>
+<script src=" {% static 'js/uploader/pickerLoader.js' %}"></script>
+<script src=" {% static 'js/uploader/upload.js' %}"></script>
+<script  async defer src="https://apis.google.com/js/api.js" onload="gapiLoaded()"></script>
+<script  async defer src="https://accounts.google.com/gsi/client" onload="gisLoaded()"></script>
+
 <!-- prettier-ignore -->
 {% endblock scripts %}

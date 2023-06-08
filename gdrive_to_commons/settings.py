@@ -151,24 +151,47 @@ LOGIN_REDIRECT_URL = "upload_page"
 LOGOUT_REDIRECT_URL = "home_page"
 SOCIAL_AUTH_URL_NAMESPACE = "social"
 
-CSP_DEFAULT_SRC = ("'self'", "*.google.com")
-CSP_STYLE_SRC = ("'self'", "'unsafe-inline'", "code.jquery.com")
-CSP_SCRIPT_SRC = ("'self'", "'unsafe-inline'", "*.google.com", "code.jquery.com")
+CSP_DEFAULT_SRC = ("'self'", "*.google.com", "*.googleapis.com")
+CSP_STYLE_SRC = (
+    "'self'",
+    "'unsafe-inline'",
+    "code.jquery.com",
+    "https://accounts.google.com/gsi/style",
+    "*.googleapis.com",
+)
+CSP_SCRIPT_SRC = (
+    "'self'",
+    "'unsafe-inline'",
+    "*.google.com",
+    "code.jquery.com",
+    "https://accounts.google.com/gsi/client",
+    "*.googleapis.com",
+)
 CSP_IMG_SRC = (
     "'self'",
     "www.w3.org",
     "data:",
     "*.google.com",
+    "*.googleapis.com",
     "*.googleusercontent.com",
     "*.wikimedia.org",
+    "*.googleapis.com",
 )
-CSP_FRAME_SRC = ("'self'", "'unsafe-inline'", "*.google.com")
-CSP_FONT_SRC = (
+CSP_FRAME_SRC = (
     "'self'",
-    "'unsafe-inline'",
+    "unsafe-inline",
+    "*.google.com",
+    "content.googleapis.com",
+    "accounts.google.com",
+    "https://accounts.google.com/gsi/",
+    "*.googleapis.com",
 )
 
-CSP_CONNECT_SRC = ("'self'", "*.wikimedia.org")
+CSP_FONT_SRC = ("'self'", "'unsafe-inline'", "*.googleapis.com")
+
+CSP_CONNECT_SRC = ("'self'", "*.wikimedia.org", "*.googleapis.com", "*.google.com")
+SECURE_CROSS_ORIGIN_OPENER_POLICY = "same-origin-allow-popups"
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
 
 from gdrive_to_commons.local_settings import *
 
