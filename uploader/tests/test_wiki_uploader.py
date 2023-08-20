@@ -17,14 +17,13 @@ class WikiUploaderTest(TestCase):
                 "imageinfo": "IMAGE INFO",
             },
         }
-        object = WikiUploader()
+        object = WikiUploader(access_token="", access_secret="")
 
-        status, info = object.upload_file(
+        info = object.upload_file(
             file_name="file_name",
             file_stream=io.BytesIO(),
             description="description",
         )
-        self.assertTrue(status)
         self.assertEqual(info, "IMAGE INFO")
         self.assertTrue(Site.called)
 
@@ -34,12 +33,14 @@ class WikiUploaderTest(TestCase):
         Site.return_value.upload.side_effect = mwclient.errors.APIError(
             "CODE", "ERROR INFO", {}
         )
-        object = WikiUploader()
+        object = WikiUploader(access_token="", access_secret="")
 
-        status, info = object.upload_file(
-            file_name="file_name", file_stream=io.BytesIO(), description="description"
-        )
+        with self.assertRaises(Exception) as context:
+            info = object.upload_file(
+                file_name="file_name",
+                file_stream=io.BytesIO(),
+                description="description",
+            )
 
-        self.assertFalse(status)
-        self.assertTrue(Site.called)
-        self.assertEqual(info, "ERROR INFO")
+            self.assertTrue(Site.called)
+            self.assertEqual(context, "ERROR INFO")

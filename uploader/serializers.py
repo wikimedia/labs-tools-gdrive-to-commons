@@ -22,4 +22,4 @@ class FileSerializer(serializers.Serializer):
 
 class GooglePhotosUploadInputSerializer(serializers.Serializer):
     fileList = FileSerializer(many=True)
-    token = fields.CharField()
+    token = fields.CharField(required=True)

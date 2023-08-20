@@ -1,32 +1,33 @@
 import io
 import logging
-from typing import List
+from dataclasses import dataclass
 
 import mwclient
 
+from gdrive_to_commons import settings
 
-class WikiUploader(object):
+
+@dataclass
+class WikiUploader:
+    access_token: str
+    access_secret: str
+    host: str = settings.WIKI_URL
+    consumer_secret: str = settings.SOCIAL_AUTH_MEDIAWIKI_SECRET
+    consumer_token: str = settings.SOCIAL_AUTH_MEDIAWIKI_KEY
     mw_client = None
 
-    def __init__(
-        self,
-        host: str = None,
-        consumer_secret: str = None,
-        consumer_token: str = None,
-        access_token: str = None,
-        access_secret: str = None,
-    ) -> None:
+    def __post_init__(self):
         self.mw_client = mwclient.Site(
-            host=host,
-            consumer_secret=consumer_secret,
-            consumer_token=consumer_token,
-            access_token=access_token,
-            access_secret=access_secret,
+            host=self.host,
+            consumer_secret=self.consumer_secret,
+            consumer_token=self.consumer_token,
+            access_token=self.access_token,
+            access_secret=self.access_secret,
         )
 
     def upload_file(
         self, file_name: str, file_stream: io.BytesIO, description: str
-    ) -> (bool, dict):
+    ) -> dict:
         try:
             upload_result = self.mw_client.upload(
                 file=file_stream,
@@ -39,68 +40,22 @@ class WikiUploader(object):
             logging.debug(
                 f"Failed to upload: {file_name} to: {self.mw_client.host}, more information: {e}"
             )
-            return False, e.info
+            raise Exception(e.info)
 
         upload_response = "Error"
         if "result" in upload_result:
-            upload_response = upload_result.get("result")
+            upload_response = upload_result.get("result", "Error")
         elif "upload" in upload_result:
-            upload_response = upload_result.get("upload").get("result")
+            upload_response = upload_result.get("upload", {}).get("result", "Error")
             upload_result = upload_result.get("upload")
 
         if upload_response == "Success":
-            debug_information = f"Uploaded: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
-            logging.debug(debug_information)
-            return True, upload_result["imageinfo"]
-        else:
             logging.debug(
-                f"Failed to upload: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
+                f"Uploaded: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
             )
-            return False, upload_result
+            return upload_result["imageinfo"]
 
-
-def get_initial_page_text(
-    license: str,
-    description: str,
-    date_created: str,
-    source: str,
-    author: str,
-    location: dict,
-    categories: List[str] = None,
-) -> str:
-    """
-    Function used to generate wiki text for the page of the uploaded image
-    """
-
-    description = f"|description={description}\n"
-    date_created = f"|date={date_created}\n"
-    source = f"|source={source}\n"
-    author = f"|author={author}\n"
-
-    if not categories:
-        categories_string = ""
-    else:
-        formatted_category_list = [f"[[{category}]]" for category in categories]
-        categories_string = "\n".join(formatted_category_list)
-
-    latitude = "" if not location["latitude"] else f"|{location['latitude']}\n"
-    longitude = "" if not location["longitude"] else f"|{location['longitude']}\n"
-    heading = "" if not location["heading"] else f"heading:|{location['heading']}\n"
-
-    location_string = (
-        ""
-        if not (latitude and longitude)
-        else f"{{{{Location{latitude}{longitude}{heading}}}}}"
-    )
-
-    return f"""=={{{{int:filedesc}}}}==
-{{{{Information
-{description}{date_created}{source}{author}
-}}}}
-{location_string}
-
-=={{{{int:license-header}}}}==
-{{{{{license}}}}}
-
-{categories_string}
-"""
+        logging.debug(
+            f"Failed to upload: {file_name} to: {self.mw_client.host}, more information: {upload_result}"
+        )
+        raise Exception(upload_result)
