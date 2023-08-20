@@ -26,10 +26,10 @@ def get_initial_page_text(
         categories_string = "\n".join(formatted_category_list)
 
     if location.get("latitude") and location.get("longitude"):
-        latitude = f"|latitude={location['latitude']}\n"
-        longitude = f"|longitude={location['longitude']}\n"
+        latitude = f"|1={location['latitude']}\n"
+        longitude = f"|2={location['longitude']}\n"
         if heading := location.get("heading"):
-            heading = f"|heading={heading}\n"
+            heading = f"|3=heading:{heading}\n"
 
         location_string = f"{{{{Location{latitude}{longitude}{heading}}}}}"
 
